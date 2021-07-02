@@ -55,8 +55,11 @@ def delete_task(task):
 def print_table():
     curs.execute("SELECT * FROM Tasks")
     myresult = curs.fetchall()
-    for x in myresult:
-       print(x)
+    print(tabulate(myresult, headers=['Name', 'Type', 'Deadline'], tablefmt='fancy_grid'))
+    # curs.execute("SELECT * FROM Tasks")
+    # myresult = curs.fetchall()
+    # for x in myresult:
+    #    print(x)
 
 def exit_out():
     exit()

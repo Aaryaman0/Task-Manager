@@ -1,10 +1,10 @@
 import sqlite3
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QApplication, QDialog
-from PyQt5.uic import loadUi
+# from PyQt5 import QtWidgets
+# rom PyQt5.QtWidgets import QApplication, QDialog
+# from PyQt5.uic import loadUi
 from tasks import Tasks
 from tabulate import tabulate
-import sys
+# import sys
 
 con = sqlite3.connect('my.db')
 
@@ -35,12 +35,8 @@ try:
 except:
     pass
 
-# curs.execute("INSERT INTO Tasks VALUES ('React Website', 'Sideproject', 'May 12th')")
-
-# con.commit()
-
 def commands():
-    print('All commands must contain commas "," between arguments')
+    print('All commands must contain a comma-space ", " between arguments')
     print('Type "add" to insert tasks - add, parameter1, parameter2, parameter3')
     print('Type "delete" to delete tasks - delete, parameter1, parameter2, parameter3')
     print('Type "search_name" to search tasks by name  - search_name, name_parameter')
@@ -74,17 +70,11 @@ def delete_task(task):
 def update_task(task, new_task):
     delete_task(task)
     insert_task(new_task)
-    # with con:
-    #    curs.execute("""UPDATE Tasks SET deadline = :deadline WHERE Name = :Name AND type = :type""", {'Name': task.name, 'type': task.type, 'deadline': date})
 
 def print_table():
     curs.execute("SELECT * FROM Tasks")
     myresult = curs.fetchall()
     print(tabulate(myresult, headers=['Name', 'Type', 'Deadline'], tablefmt='fancy_grid'))
-    # curs.execute("SELECT * FROM Tasks")
-    # myresult = curs.fetchall()
-    # for x in myresult:
-    #    print(x)
 
 def empty_table():
     curs.execute("DELETE FROM Tasks")
@@ -92,21 +82,9 @@ def empty_table():
 def exit_out():
     exit()
 
-task_1 = Tasks('Math247 A5', 'Assignment', 'June 15')
-task_2 = Tasks('Math247 A6', 'Assignment', 'June 29')
-
-# insert_task(task_2)
-# delete_task(task_2)
-print_table
-
 def user_input():
-    print("Here is a list of commands for the database")
-    print("")
-    # print("Type commands to access it at any point")
     string = str(input("Please enter your commands: ")).strip()
     array = string.split(", ")
-    # print(array)
-    # print(array[0])
     if(array[0] == "add"):
         insert_task(Tasks(array[1], array[2], array[3]))
         user_input()
@@ -138,24 +116,19 @@ def user_input():
         exit()
     else:
         print("This is an invalid command, please enter a valid command")
+        print("Type commands to access the list of commands at any point")
         user_input()
 
-    
-# print_table()
+def start():
+    print("Hello!")
+    print("Here is a list of commands for the database")
+    print("")
+    commands()
+    print("Type commands to access it at any point")
+    user_input()
 
-user_input()
 
-# con.execute("INSERT INTO Tasks VALUES (:Name, :type, :deadline)", {'Name': task_1.name, 'type': task_1.type, 'deadline': task_1.deadline})
-
-# curs.execute("SELECT * FROM Tasks WHERE type = 'Sideproject'")
-
-# print(curs.fetchall())
-
-# curs.execute("SELECT * FROM Tasks WHERE type = :type", {'type': 'Assignment'})
-
-# print(curs.fetchall())
-
-#print_table()
+start()
 
 con.commit()
 

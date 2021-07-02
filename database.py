@@ -3,6 +3,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QDialog
 from PyQt5.uic import loadUi
 from tasks import Tasks
+from tabulate import tabulate
 import sys
 
 con = sqlite3.connect('my.db')
@@ -55,12 +56,51 @@ def print_table():
     curs.execute("SELECT * FROM Tasks")
     myresult = curs.fetchall()
     for x in myresult:
-        print(x)
+       print(x)
+
+def exit_out():
+    exit()
 
 task_1 = Tasks('Math247 A5', 'Assignment', 'June 15')
 task_2 = Tasks('Math247 A6', 'Assignment', 'June 29')
 
-delete_task(task_2)
+# insert_task(task_2)
+# delete_task(task_2)
+print_table
+
+def user_input():
+    print("Here is a list of commands for the database")
+    print("")
+    # print("Type commands to access it at any point")
+    string = str(input("Please enter your commands: ")).strip()
+    array = string.split(", ")
+    print(array)
+    print(array[0])
+    if(array[0] == "add"):
+        insert_task(Tasks(array[1], array[2], array[3]))
+        user_input()
+    elif(array[0] == "search"):
+        find_task(array[1])
+        user_input()
+    elif(array[0] == "delete"):
+        delete_task(Tasks(array[1], array[2], array[3]))
+        user_input()
+    elif(array[0] == "update"):
+        update_task(Tasks(array[1], array[2], array[3]), array[3])
+        user_input()
+    elif(array[0] == "print"):
+        print_table()
+        user_input()
+    elif(array[0] == "exit"):
+        exit()
+    else:
+        print("This is an invalid command, please enter a valid command")
+        user_input()
+
+    
+# print_table()
+
+user_input()
 
 # con.execute("INSERT INTO Tasks VALUES (:Name, :type, :deadline)", {'Name': task_1.name, 'type': task_1.type, 'deadline': task_1.deadline})
 
@@ -72,7 +112,7 @@ delete_task(task_2)
 
 # print(curs.fetchall())
 
-print_table()
+#print_table()
 
 con.commit()
 

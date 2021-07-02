@@ -1,39 +1,15 @@
 import sqlite3
-# from PyQt5 import QtWidgets
-# rom PyQt5.QtWidgets import QApplication, QDialog
-# from PyQt5.uic import loadUi
 from tasks import Tasks
 from tabulate import tabulate
-# import sys
 
 con = sqlite3.connect('my.db')
 
 curs = con.cursor()
 
-#class MainWindow(QDialog):
-#    def __init__(self):
-#        super(MainWindow, self).__init__()
-#       loadUi("tabletutorial.ui", self)
-#        self.tableWidget.setColumnWidth(0, 300)
-#        self.tableWidget.setColumnWidth(1, 200)
-#        self.tableWidget.setColumnWidth(2, 200)
-#        self.tableWidget.setHorizontalHeaderLabels(["Name", "Type", "Deadline"])
-#        # self.loaddata()
-
-#app = QApplication(sys.argv)
-#mainwindow = MainWindow()
-#widget = QtWidgets.QStackedWidget()
-#widget.addWidget(mainwindow)
-#widget.show()
-#try:
- #   sys.exit(app.exec_())
-#except:
-  #  print("Exiting")
-
 try:
-    curs.execute("""CREATE TABLE Tasks (name text, type text, deadline text)""")
+   curs.execute("""CREATE TABLE Tasks (name text PRIMARY KEY, type text, deadline text)""")
 except:
-    pass
+   pass
 
 def commands():
     print('All commands must contain a comma-space ", " between arguments')
@@ -53,15 +29,18 @@ def insert_task(task):
 
 def find_task_name(name):
     curs.execute("SELECT * FROM Tasks WHERE name = :name", {'name': name})
-    print(curs.fetchall())
+    myresult = curs.fetchall()
+    print(tabulate(myresult, headers=['Name', 'Type', 'Deadline'], tablefmt='fancy_grid'))
 
 def find_task_type(type):
     curs.execute("SELECT * FROM Tasks WHERE type = :type", {'type': type})
-    print(curs.fetchall())
+    myresult = curs.fetchall()
+    print(tabulate(myresult, headers=['Name', 'Type', 'Deadline'], tablefmt='fancy_grid'))
 
 def find_task_deadline(deadline):
     curs.execute("SELECT * FROM Tasks WHERE deadline = :deadline", {'deadline': deadline})
-    print(curs.fetchall())
+    myresult = curs.fetchall()
+    print(tabulate(myresult, headers=['Name', 'Type', 'Deadline'], tablefmt='fancy_grid'))
 
 def delete_task(task):
     with con:
@@ -86,7 +65,10 @@ def user_input():
     string = str(input("Please enter your commands: ")).strip()
     array = string.split(", ")
     if(array[0] == "add"):
-        insert_task(Tasks(array[1], array[2], array[3]))
+        try:
+            insert_task(Tasks(array[1], array[2], array[3]))
+        except:
+            print("This name already exists in the database, please use a different name")
         user_input()
     elif(array[0] == "search_type"):
         find_task_type(array[1])
@@ -133,3 +115,31 @@ start()
 con.commit()
 
 con.close()
+
+# Frontend - to be built (maybe)
+
+# from PyQt5 import QtWidgets
+# rom PyQt5.QtWidgets import QApplication, QDialog
+# from PyQt5.uic import loadUi
+
+# import sys
+
+#class MainWindow(QDialog):
+#    def __init__(self):
+#        super(MainWindow, self).__init__()
+#       loadUi("tabletutorial.ui", self)
+#        self.tableWidget.setColumnWidth(0, 300)
+#        self.tableWidget.setColumnWidth(1, 200)
+#        self.tableWidget.setColumnWidth(2, 200)
+#        self.tableWidget.setHorizontalHeaderLabels(["Name", "Type", "Deadline"])
+#        # self.loaddata()
+
+#app = QApplication(sys.argv)
+#mainwindow = MainWindow()
+#widget = QtWidgets.QStackedWidget()
+#widget.addWidget(mainwindow)
+#widget.show()
+#try:
+ #   sys.exit(app.exec_())
+#except:
+  #  print("Exiting")

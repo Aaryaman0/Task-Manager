@@ -43,17 +43,24 @@ def commands():
     print('All commands must contain commas "," between arguments')
     print('Type "add" to insert tasks - add, parameter1, parameter2, parameter3')
     print('Type "delete" to delete tasks - delete, parameter1, parameter2, parameter3')
+    print('Type "search_name" to search tasks by name  - search_name, name_parameter')
+    print('Type "search_type" to search tasks by type  - search_type, type_parameter')
+    print('Type "search_deadline" to search tasks by deadline  - search_deadline, deadline_parameter')
+    print('Type "update" to update tasks - update, parameter1, parameter2, parameter3, new_parameter1, new_parameter2, new_parameter3')
+    print('Type "print" print the table of tasks')
+    print('Type "wipe" to clear the table completely')
+    print('Type "exit" to exit the program')
 
 def insert_task(task):
     with con:
         curs.execute("INSERT INTO Tasks VALUES (:Name, :type, :deadline)", {'Name': task.name, 'type': task.type, 'deadline': task.deadline})
 
-def find_task_type(type):
-    curs.execute("SELECT * FROM Tasks WHERE type = :type", {'type': type})
-    print(curs.fetchall())
-
 def find_task_name(name):
     curs.execute("SELECT * FROM Tasks WHERE name = :name", {'name': name})
+    print(curs.fetchall())
+
+def find_task_type(type):
+    curs.execute("SELECT * FROM Tasks WHERE type = :type", {'type': type})
     print(curs.fetchall())
 
 def find_task_deadline(deadline):
@@ -98,8 +105,8 @@ def user_input():
     # print("Type commands to access it at any point")
     string = str(input("Please enter your commands: ")).strip()
     array = string.split(", ")
-    print(array)
-    print(array[0])
+    # print(array)
+    # print(array[0])
     if(array[0] == "add"):
         insert_task(Tasks(array[1], array[2], array[3]))
         user_input()
@@ -123,6 +130,9 @@ def user_input():
         user_input()
     elif(array[0] == "wipe"):
         empty_table()
+        user_input()
+    elif(array[0] == "commands"):
+        commands()
         user_input()
     elif(array[0] == "exit"):
         exit()

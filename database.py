@@ -44,13 +44,15 @@ def find_task(type_name):
     curs.execute("SELECT * FROM Tasks WHERE type = :type", {'type': type_name})
     print(curs.fetchall())
 
-def update_task(task, date):
-    with con:
-        curs.execute("""UPDATE Tasks SET deadline = :deadline WHERE Name = :Name AND type = :type""", {'Name': task.name, 'type': task.type, 'deadline': date})
-
 def delete_task(task):
     with con:
         curs.execute("""DELETE from Tasks WHERE Name = :Name AND type = :type""", {'Name': task.name, 'type': task.type})
+
+def update_task(task, new_task):
+    delete_task(task)
+    insert_task(new_task)
+    # with con:
+    #    curs.execute("""UPDATE Tasks SET deadline = :deadline WHERE Name = :Name AND type = :type""", {'Name': task.name, 'type': task.type, 'deadline': date})
 
 def print_table():
     curs.execute("SELECT * FROM Tasks")
@@ -60,6 +62,9 @@ def print_table():
     # myresult = curs.fetchall()
     # for x in myresult:
     #    print(x)
+
+def empty_table():
+    curs.execute("DELETE FROM Tasks")
 
 def exit_out():
     exit()
@@ -89,7 +94,7 @@ def user_input():
         delete_task(Tasks(array[1], array[2], array[3]))
         user_input()
     elif(array[0] == "update"):
-        update_task(Tasks(array[1], array[2], array[3]), array[3])
+        update_task(Tasks(array[1], array[2], array[3]), Tasks(array[4], array[5], array[6]))
         user_input()
     elif(array[0] == "print"):
         print_table()

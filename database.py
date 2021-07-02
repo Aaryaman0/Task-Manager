@@ -30,18 +30,34 @@ curs = con.cursor()
 #except:
   #  print("Exiting")
 
-# curs.execute("""CREATE TABLE Tasks (name text, type text, deadline text)""")
+try:
+    curs.execute("""CREATE TABLE Tasks (name text, type text, deadline text)""")
+except:
+    pass
 
 # curs.execute("INSERT INTO Tasks VALUES ('React Website', 'Sideproject', 'May 12th')")
 
 # con.commit()
 
+def commands():
+    print('All commands must contain commas "," between arguments')
+    print('Type "add" to insert tasks - add, parameter1, parameter2, parameter3')
+    print('Type "delete" to delete tasks - delete, parameter1, parameter2, parameter3')
+
 def insert_task(task):
     with con:
         curs.execute("INSERT INTO Tasks VALUES (:Name, :type, :deadline)", {'Name': task.name, 'type': task.type, 'deadline': task.deadline})
 
-def find_task(type_name):
-    curs.execute("SELECT * FROM Tasks WHERE type = :type", {'type': type_name})
+def find_task_type(type):
+    curs.execute("SELECT * FROM Tasks WHERE type = :type", {'type': type})
+    print(curs.fetchall())
+
+def find_task_name(name):
+    curs.execute("SELECT * FROM Tasks WHERE name = :name", {'name': name})
+    print(curs.fetchall())
+
+def find_task_deadline(deadline):
+    curs.execute("SELECT * FROM Tasks WHERE deadline = :deadline", {'deadline': deadline})
     print(curs.fetchall())
 
 def delete_task(task):
@@ -87,8 +103,14 @@ def user_input():
     if(array[0] == "add"):
         insert_task(Tasks(array[1], array[2], array[3]))
         user_input()
-    elif(array[0] == "search"):
-        find_task(array[1])
+    elif(array[0] == "search_type"):
+        find_task_type(array[1])
+        user_input()
+    elif(array[0] == "search_name"):
+        find_task_name(array[1])
+        user_input()
+    elif(array[0] == "search_deadline"):
+        find_task_deadline(array[1])
         user_input()
     elif(array[0] == "delete"):
         delete_task(Tasks(array[1], array[2], array[3]))
@@ -98,6 +120,9 @@ def user_input():
         user_input()
     elif(array[0] == "print"):
         print_table()
+        user_input()
+    elif(array[0] == "wipe"):
+        empty_table()
         user_input()
     elif(array[0] == "exit"):
         exit()
